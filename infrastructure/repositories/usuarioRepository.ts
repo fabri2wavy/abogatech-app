@@ -38,8 +38,7 @@ let currentUserId: string | null = null;
 
 export async function obtenerPerfilActual(): Promise<UsuarioPerfil | null> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     cachePerfil = null;
@@ -72,8 +71,6 @@ export async function obtenerPerfilActual(): Promise<UsuarioPerfil | null> {
   return perfil;
 }
 
-
-
 /* ══════════════════════════════════════════════════════════════
    QUERY: Obtener perfil editable del usuario autenticado
    ──────────────────────────────────────────────────────────────
@@ -93,8 +90,7 @@ export interface PerfilEditable {
 
 export async function obtenerPerfilEditable(): Promise<PerfilEditable | null> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return null;
 
@@ -102,7 +98,7 @@ export async function obtenerPerfilEditable(): Promise<PerfilEditable | null> {
     .from('perfiles')
     .select('id, nombres, apellido_paterno, apellido_materno, telefono, rol')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   if (error || !data) {
     console.error('Error al obtener perfil editable:', error?.message);
@@ -128,8 +124,7 @@ export async function actualizarPerfilPropio(
   datos: { nombres: string; apellidoPaterno: string; apellidoMaterno: string; telefono: string }
 ): Promise<{ success: boolean; error?: string }> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return { success: false, error: 'Sesión expirada.' };
 

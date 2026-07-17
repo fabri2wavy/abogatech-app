@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+import { createClient } from '@/infrastructure/supabase/client';
 
 export default function AsistenteLegal() {
     const [mensajes, setMensajes] = useState<{ rol: string, contenido: string }[]>([]);
@@ -18,10 +14,12 @@ export default function AsistenteLegal() {
 
     // Validar sesión real del navegador
     useEffect(() => {
+        const supabase = createClient();
+
         const revisarSesion = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) {
-                setUsuarioId(session.user.id);
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                setUsuarioId(user.id);
             }
         };
 

@@ -186,17 +186,16 @@ export async function crearHonorarioConCuotas(
 
   try {
     /* ── Validación asíncrona de identidad (Early Return) ─────── */
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const authData = { user: session?.user };
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !authData.user) {
+    if (authError || !user) {
       return {
         data: null,
         error: 'No autorizado: Sesión expirada o inválida.',
       };
     }
 
-    const userId = authData.user.id;
+    const userId = user.id;
 
     /* ══════════════════════════════════════════════════════════
        VALIDADOR MATEMÁTICO ESTRICTO (Barrera Server-Side)
@@ -298,17 +297,16 @@ export async function registrarGasto(
 
   try {
     /* ── Validación asíncrona de identidad (Early Return) ─────── */
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const authData = { user: session?.user };
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !authData.user) {
+    if (authError || !user) {
       return {
         data: null,
         error: 'No autorizado: Sesión expirada o inválida.',
       };
     }
 
-    const userId = authData.user.id;
+    const userId = user.id;
 
     /* ── Inserción DML con creado_por inyectado ───────────────────── */
     const { data: gastoInsertado, error: gastoError } = await supabase

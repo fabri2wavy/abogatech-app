@@ -31,14 +31,17 @@ export async function middleware(request: NextRequest) {
         }
     )
 
-    // Usamos getSession en lugar de getUser en el middleware para evitar 
-    // alcanzar el límite de peticiones (Rate Limit) de la API de Supabase Auth,
-    // ya que este middleware se ejecuta en casi todas las rutas y no hace protección estricta.
-    try {
-        await supabase.auth.getSession()
-    } catch (error) {
-        // Silenciar errores de rate limit o auth en el middleware
-        console.error("Middleware Auth Error:", error)
+    const { data: { user }, error } = await supabase.auth.getUser()
+
+    const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard')
+    const isAuthRoute = request.nextUrl.pathname === '/login'
+
+    if (isProtectedRoute && (error || !user)) {
+        return NextResponse.redirect(new URL('/login', request.url))
+    }
+
+    if (isAuthRoute && user) {
+        return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
     return response

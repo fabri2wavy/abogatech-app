@@ -30,8 +30,7 @@ interface ActionResponse<T = unknown> {
 export async function verificarAccesoAdmin(): Promise<ActionResponse<{ rol: string }>> {
   try {
     const supabase = await createClient();
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const user = session?.user;
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return { success: false, error: 'Sesión expirada o inválida.' };
@@ -65,8 +64,7 @@ export async function verificarAccesoAdmin(): Promise<ActionResponse<{ rol: stri
 export async function verificarAccesoPlantillas(): Promise<ActionResponse<{ rol: string }>> {
   try {
     const supabase = await createClient();
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const user = session?.user;
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       return { success: false, error: 'Sesión expirada o inválida.' };

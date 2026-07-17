@@ -25,17 +25,16 @@ export async function crearUsuarioDesdeAdmin(
 ): Promise<{ userId: string } | { error: string }> {
   try {
     const supabase = await createClient();
-    const { data: { session }, error: userError } = await supabase.auth.getSession();
-  const userData = { user: session?.user };
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (userError || !userData?.user) {
+    if (userError || !user) {
       return { error: 'No autorizado. Debe iniciar sesión.' };
     }
 
     const { data: perfilData, error: perfilError } = await supabase
       .from('perfiles')
       .select('rol')
-      .eq('id', userData.user.id)
+      .eq('id', user.id)
       .single();
 
     if (perfilError || !perfilData || (perfilData.rol !== 'admin' && perfilData.rol !== 'abogado')) {
