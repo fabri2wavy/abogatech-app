@@ -362,7 +362,7 @@ export default function DetalleExpedientePage() {
         </div>
         <div className="flex flex-col items-start sm:items-end gap-2 shrink-0">
           <div className="flex items-center gap-2">
-            {(perfilUsuario?.rol === 'admin' || perfilUsuario?.rol === 'socio') && (
+            {(perfilUsuario?.rol === 'admin' || perfilUsuario?.rol === 'socio' || perfilUsuario?.rol === 'asociado_senior') && (
               <button
                 onClick={() => setIsShareModalOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-[var(--color-gold)] bg-transparent border border-[var(--color-gold)] rounded-lg hover:bg-[var(--color-gold-dim)] transition-colors"

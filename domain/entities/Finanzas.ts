@@ -21,6 +21,9 @@ export interface Honorario {
    moneda: MonedaHonorario;
    estadoContrato: EstadoContrato;
    creadoEn: string; // ISO 8601
+   autorizadoAdministracion?: boolean;
+   porcentajeFondo?: number;
+   distribucionAbogados?: any; // JSON object representing lawyer ID to percentage mapping
 }
 
 /* ══════════════════════════════════════════════════════════════
