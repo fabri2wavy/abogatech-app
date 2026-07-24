@@ -20,7 +20,7 @@ export async function obtenerAbogadosYSocios(): Promise<UsuarioPerfil[]> {
   const { data, error } = await supabase
     .from('perfiles')
     .select('id, nombres, apellido_paterno, apellido_materno, rol')
-    .in('rol', ['abogado', 'socio'])
+    .in('rol', ['abogado', 'admin', 'asociado_senior', 'finanzas'])
     .order('nombres', { ascending: true });
 
   if (error || !data) {
@@ -34,9 +34,16 @@ export async function obtenerAbogadosYSocios(): Promise<UsuarioPerfil[]> {
 export async function compartirExpediente(
   expedienteId: string,
   abogadoId: string,
-  otorgadoPor: string
+  otorgadoPor?: string
 ): Promise<{ success: boolean; error?: string }> {
   const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const idUsuarioActual = user?.id || otorgadoPor;
+
+  if (!idUsuarioActual) {
+    return { success: false, error: 'No se pudo verificar la sesión del usuario actual.' };
+  }
 
   // Verificar si ya existe acceso
   const { data: existente } = await supabase
@@ -55,11 +62,17 @@ export async function compartirExpediente(
     .insert({
       expediente_id: expedienteId,
       abogado_id: abogadoId,
-      otorgado_por: otorgadoPor,
+      otorgado_por: idUsuarioActual,
     });
 
   if (error) {
     console.error('Error al compartir expediente:', error.message);
+    if (error.code === '42501' || error.message.includes('row-level security')) {
+      return {
+        success: false,
+        error: 'No tienes permisos de seguridad suficientes para compartir este expediente. Solo el abogado principal del caso o un socio pueden otorgar accesos.',
+      };
+    }
     return { success: false, error: 'Error al compartir el expediente.' };
   }
 

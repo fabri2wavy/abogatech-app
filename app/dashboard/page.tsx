@@ -28,7 +28,9 @@ export default function DashboardInicio() {
 
       setPerfil(data);
 
-      if (data.rol === "abogado") {
+      const esAbogadoOAsociado = ["abogado", "asociado_senior", "finanzas"].includes(data.rol);
+
+      if (esAbogadoOAsociado) {
         try {
           const [expData, evtData] = await Promise.all([
             obtenerExpedientes(),
@@ -50,7 +52,7 @@ export default function DashboardInicio() {
 
       setCargando(false);
     }
-    
+
     verificarSesion();
   }, [router]);
 
@@ -67,6 +69,8 @@ export default function DashboardInicio() {
     case 'admin':
       return <AdminDashboard nombre={perfil.nombre_completo} eventos={eventos} />;
     case 'abogado':
+    case 'asociado_senior':
+    case 'finanzas':
       return (
         <AbogadoDashboard
           usuario={perfil}

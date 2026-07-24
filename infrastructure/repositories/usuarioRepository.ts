@@ -22,7 +22,7 @@ export async function obtenerAbogados(): Promise<UsuarioPerfil[]> {
   const { data, error } = await supabase
     .from('perfiles')
     .select('id, nombres, apellido_paterno, apellido_materno, rol')
-    .in('rol', ['abogado', 'admin'])
+    .in('rol', ['abogado', 'admin', 'asociado_senior', 'finanzas'])
     .order('nombres', { ascending: true });
 
   if (error || !data) {

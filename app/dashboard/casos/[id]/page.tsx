@@ -393,7 +393,7 @@ export default function DetalleExpedientePage() {
         className="flex gap-1 mb-6 overflow-x-auto pb-1 animate-fade-up"
         style={{ animationDelay: "100ms" }}
       >
-        {TAB_ITEMS.map((tab) => (
+        {TAB_ITEMS.filter((tab) => !(tab.key === "finanzas" && perfilUsuario?.rol === "abogado")).map((tab) => (
           <button
             key={tab.key}
             onClick={() => setPestañaActiva(tab.key)}
@@ -744,7 +744,7 @@ export default function DetalleExpedientePage() {
           <InformesAvanceTab expedienteId={idCaso} />
         )}
 
-        {pestañaActiva === "finanzas" && (
+        {pestañaActiva === "finanzas" && perfilUsuario?.rol !== "abogado" && (
           <FinanzasTab expedienteId={idCaso} expediente={caso} />
         )}
 
