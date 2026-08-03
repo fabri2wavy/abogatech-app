@@ -41,6 +41,5 @@ export const config = {
     matcher: [
         '/dashboard/:path*',
         '/asistente/:path*',
-        '/tarjeta/:path*',
     ],
 }
