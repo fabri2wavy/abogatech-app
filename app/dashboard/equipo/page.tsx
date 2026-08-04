@@ -64,8 +64,8 @@ const ROL_CONFIG: Record<
     text: "text-violet-700",
     border: "border-violet-200",
   },
-  socio: {
-    label: "Socio",
+  asociado_senior: {
+    label: "Asociado Senior",
     bg: "bg-amber-50",
     text: "text-amber-700",
     border: "border-amber-200",
@@ -82,12 +82,6 @@ const ROL_CONFIG: Record<
     text: "text-blue-700",
     border: "border-blue-200",
   },
-  paralegal: {
-    label: "Paralegal",
-    bg: "bg-sky-50",
-    text: "text-sky-700",
-    border: "border-sky-200",
-  },
 };
 
 function getRolConfig(rol: string) {
@@ -102,11 +96,10 @@ function getRolConfig(rol: string) {
 }
 
 const ROLES_OPTIONS = [
-  { value: "socio", label: "Asociado Senior / Socio" },
-  { value: "abogado", label: "Abogado" },
-  { value: "paralegal", label: "Paralegal" },
-  { value: "finanzas", label: "Administración / Finanzas" },
   { value: "admin", label: "Administrador" },
+  { value: "asociado_senior", label: "Asociado Senior" },
+  { value: "finanzas", label: "Administración / Finanzas" },
+  { value: "abogado", label: "Abogado" },
 ];
 
 const FORM_INIT = {

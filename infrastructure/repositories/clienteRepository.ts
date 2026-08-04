@@ -8,12 +8,17 @@ import { completarRegistroClienteAdmin, actualizarPerfilAdmin, eliminarPerfilAdm
 function construirNombreCompleto(
   nombres?: string | null,
   apellidoPaterno?: string | null,
-  apellidoMaterno?: string | null
+  apellidoMaterno?: string | null,
+  nombreEmpresa?: string | null
 ): string {
-  return [nombres, apellidoPaterno, apellidoMaterno]
+  if (nombreEmpresa && !nombres && !apellidoPaterno) {
+    return nombreEmpresa.trim();
+  }
+  const nombrePersona = [nombres, apellidoPaterno, apellidoMaterno]
     .filter(Boolean)
     .join(' ')
-    .trim() || 'Sin registrar';
+    .trim();
+  return nombrePersona || (nombreEmpresa ? nombreEmpresa.trim() : 'Sin registrar');
 }
 
 export interface DatosNuevoCliente {
@@ -53,7 +58,12 @@ function mapearCliente(fila: any): Cliente {
 
   return {
     id: fila.id,
-    nombreCompleto: construirNombreCompleto(fila.nombres, fila.apellido_paterno, fila.apellido_materno),
+    nombreCompleto: construirNombreCompleto(
+      fila.nombres,
+      fila.apellido_paterno,
+      fila.apellido_materno,
+      detalle.nombre_empresa
+    ),
     email: '',
     telefono: fila.telefono ?? '',
     rol: fila.rol,
@@ -86,9 +96,8 @@ export async function crearCliente(
   datos: DatosNuevoCliente
 ): Promise<{ success: boolean; data?: Cliente; error?: string }> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const userData = { user: session?.user };
-  const loggedInUserId = userData.user?.id;
+  const { data: { user } } = await supabase.auth.getUser();
+  const loggedInUserId = user?.id;
 
   const authResult = await crearUsuarioDesdeAdmin(datos.email);
 
@@ -98,7 +107,12 @@ export async function crearCliente(
 
   const userId = authResult.userId;
 
-  const nombreCompleto = construirNombreCompleto(datos.nombres, datos.apellidoPaterno, datos.apellidoMaterno);
+  const nombreCompleto = construirNombreCompleto(
+    datos.nombres,
+    datos.apellidoPaterno,
+    datos.apellidoMaterno,
+    datos.nombreEmpresa
+  );
 
 
   const registroResult = await completarRegistroClienteAdmin(userId, datos, loggedInUserId);
@@ -158,10 +172,14 @@ export async function obtenerClientes(): Promise<Cliente[]> {
   const ids = clientesSinEmail.map((c) => c.id);
   const emailMap = await obtenerEmailsUsuariosPorIds(ids);
 
-  return clientesSinEmail.map((c) => ({
-    ...c,
-    email: emailMap[c.id] || '',
-  }));
+  return clientesSinEmail.map((c) => {
+    const emailRaw = emailMap[c.id] || '';
+    const emailLimpio = emailRaw.includes('@temp.local') ? '' : emailRaw;
+    return {
+      ...c,
+      email: emailLimpio,
+    };
+  });
 }
 
 export async function obtenerClientePorId(id: string): Promise<Cliente | null> {
@@ -171,16 +189,17 @@ export async function obtenerClientePorId(id: string): Promise<Cliente | null> {
     .from('perfiles')
     .select('*, detalles_cliente(*)')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
   if (error || !data) {
     console.error('Error al obtener cliente por ID:', error?.message);
     return null;
   }
-  const email = await obtenerEmailUsuarioPorId(id);
+  const emailRaw = await obtenerEmailUsuarioPorId(id);
+  const emailLimpio = emailRaw && !emailRaw.includes('@temp.local') ? emailRaw : '';
 
   const clienteMapeado = mapearCliente(data);
-  return { ...clienteMapeado, email };
+  return { ...clienteMapeado, email: emailLimpio };
 }
 
 export async function obtenerExpedientesPorCliente(clienteId: string): Promise<Expediente[]> {

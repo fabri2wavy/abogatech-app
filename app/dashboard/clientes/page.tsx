@@ -137,7 +137,7 @@ export default function ClientesPage() {
                       <span className="text-sm font-bold text-gray-900">{c.nombreCompleto}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-6 text-sm text-gray-500">{c.email || "—"}</td>
+                  <td className="py-4 px-6 text-sm text-gray-500">{c.email && !c.email.includes('@temp.local') ? c.email : "—"}</td>
                   <td className="py-4 px-6 text-sm text-gray-500">{c.telefono || "—"}</td>
                   <td className="py-4 px-6">
                     <span className={`${css.badge} ${c.etapaComercial === 'potencial' ? css.badgePotencial : css.badgeActivo}`}>
@@ -169,7 +169,7 @@ export default function ClientesPage() {
               </h3>
               <button onClick={cerrarModal} className="text-gray-400 hover:text-gray-900">&times;</button>
             </div>
-            
+
             <div className="flex-1 flex flex-col overflow-hidden min-h-0">
               <div className="px-8 py-6 overflow-y-auto flex-1" style={{ maxHeight: 'calc(90vh - 80px)' }}>
                 {formError && (
@@ -178,7 +178,7 @@ export default function ClientesPage() {
                     {formError}
                   </div>
                 )}
-                
+
                 <ClienteForm
                   onSubmit={handleGuardar}
                   onCancel={cerrarModal}

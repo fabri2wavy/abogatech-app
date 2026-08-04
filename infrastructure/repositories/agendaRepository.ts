@@ -142,16 +142,15 @@ export async function crearEvento(
   const supabase = createClient();
 
   /* ── Extraer usuario autenticado ─────────────────────────── */
-  const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const authData = { user: session?.user };
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (authError || !authData.user) {
+  if (authError || !user) {
     throw new Error(
       `No se pudo verificar la sesión del usuario: ${authError?.message ?? 'Usuario no autenticado.'}`
     );
   }
 
-  const userId = authData.user.id;
+  const userId = user.id;
 
   /* ── Inserción DML ───────────────────────────────────────── */
   const { data, error } = await supabase

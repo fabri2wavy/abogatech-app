@@ -21,6 +21,8 @@ import {
 } from "@/infrastructure/repositories/finanzasRepository";
 import { ToastContainer, useToasts } from "@/components/ui/Toast";
 import ComprobanteImpresion from "@/components/finanzas/ComprobanteImpresion";
+import { exportarComprobanteExcel } from "@/infrastructure/utils/excelExporter";
+import { obtenerPerfilActual } from "@/infrastructure/repositories/usuarioRepository";
 
 function formatearMoneda(monto: number, moneda: MonedaHonorario = "BS"): string {
   const prefijo = moneda === "USD" ? "$" : "Bs.";
@@ -518,10 +520,14 @@ function ModalCrearContrato({
   const [fondoOficina, setFondoOficina] = useState(10);
   const [reparto, setReparto] = useState<{ abogadoId: string; porcentaje: string }[]>([]);
   const [abogadosDisponibles, setAbogadosDisponibles] = useState<any[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     import('@/infrastructure/repositories/expedienteAccesoRepository').then(m => {
       m.obtenerAbogadosYSocios().then(data => setAbogadosDisponibles(data));
+    });
+    obtenerPerfilActual().then(p => {
+      if (p?.rol === 'admin') setIsAdmin(true);
     });
   }, []);
 
@@ -549,7 +555,7 @@ function ModalCrearContrato({
   const porcentajeDistribuido = montoNum > 0 ? Math.min((sumaCuotas / montoNum) * 100, 100) : 0;
 
   /* ── Lógica Calculadora de Reparto ── */
-  const impuestosPorcentaje = autorizado ? 0 : 28.5;
+  const impuestosPorcentaje = 28.5; // Always fixed
   const totalDescuentoPorcentaje = impuestosPorcentaje + fondoOficina;
   const montoDescuento = (montoNum * totalDescuentoPorcentaje) / 100;
   const baseReparto = montoNum - montoDescuento;
@@ -627,6 +633,12 @@ function ModalCrearContrato({
       return;
     }
 
+    const sumReparto = reparto.reduce((sum, r) => sum + (parseFloat(r.porcentaje) || 0), 0);
+    if (sumReparto > 100.01) {
+      setFormError(`El reparto a abogados suma ${sumReparto}%, no puede exceder el 100%. El remanente se asignará automáticamente al abogado principal.`);
+      return;
+    }
+
     setGuardando(true);
 
     const honorarioDTO: CreateHonorarioDTO = {
@@ -634,6 +646,9 @@ function ModalCrearContrato({
       montoTotal: montoNum,
       moneda,
       estadoContrato: "vigente",
+      autorizadoAdministracion: autorizado,
+      porcentajeFondo: fondoOficina,
+      distribucionAbogados: reparto,
     };
 
     const payloadCuotas: CreateCuotaDTO[] = cuotasForm.map((c) => ({
@@ -971,18 +986,20 @@ function ModalCrearContrato({
                 Calculadora de Reparto
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="autorizado"
-                    checked={autorizado}
-                    onChange={(e) => setAutorizado(e.target.checked)}
-                    className="w-4 h-4 text-[var(--color-navy)] rounded border-gray-300 focus:ring-[var(--color-navy)]"
-                  />
-                  <label htmlFor="autorizado" className="text-sm text-[var(--color-text-primary)] font-medium">
-                    Autorizado por Administración
-                  </label>
-                </div>
+                {isAdmin ? (
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="autorizado"
+                      checked={autorizado}
+                      onChange={(e) => setAutorizado(e.target.checked)}
+                      className="w-4 h-4 text-[var(--color-navy)] rounded border-gray-300 focus:ring-[var(--color-navy)]"
+                    />
+                    <label htmlFor="autorizado" className="text-sm text-[var(--color-text-primary)] font-medium">
+                      Autorizado por Administración
+                    </label>
+                  </div>
+                ) : <div />}
                 <div className="space-y-1">
                   <label className="text-xs font-semibold uppercase tracking-widest text-[var(--color-text-muted)]">
                     Fondo de Oficina
@@ -1039,7 +1056,7 @@ function ModalCrearContrato({
                     >
                       <option value="">Seleccione un abogado...</option>
                       {abogadosDisponibles.map((abg: any) => (
-                        <option key={abg.id} value={abg.id}>{abg.nombres} {abg.apellido_paterno}</option>
+                        <option key={abg.id} value={abg.id}>{abg.nombre_completo}</option>
                       ))}
                     </select>
                     <div className="relative w-24">
@@ -1072,6 +1089,18 @@ function ModalCrearContrato({
                     </button>
                   </div>
                 ))}
+                {(() => {
+                  const sumReparto = reparto.reduce((sum, r) => sum + (parseFloat(r.porcentaje) || 0), 0);
+                  const remanente = 100 - sumReparto;
+                  if (reparto.length > 0 && remanente > 0 && remanente <= 100) {
+                    return (
+                      <div className="text-xs text-[var(--color-text-muted)] italic mt-2 text-right pr-12">
+                        El {remanente.toFixed(1)}% restante ({simboloMoneda} {((baseReparto * remanente) / 100).toLocaleString("es-BO", { minimumFractionDigits: 2 })}) se asignará automáticamente al abogado principal.
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             </div>
           </div>
@@ -1453,10 +1482,20 @@ export default function FinanzasTab({ expedienteId, expediente }: FinanzasTabPro
 
       <div className="space-y-6 print:hidden">
 
-      <div className="flex justify-end print:hidden">
+      <div className="flex justify-end gap-3 print:hidden">
+        <button
+          onClick={() => exportarComprobanteExcel(honorario, expediente)}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-emerald-700 text-white hover:bg-emerald-600 transition-colors shadow-sm cursor-pointer"
+          title="Descargar comprobante en formato Excel (.xlsx)"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Exportar Excel
+        </button>
         <button
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition-colors cursor-pointer"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />

@@ -29,12 +29,11 @@ export async function convertirClienteActivo(
     const supabase = await createServerClient();
     
     // 1. Validar sesión del usuario que invoca la acción
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const userData = { user: session?.user };
-    if (authError || !userData?.user) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return { success: false, error: 'No autorizado o sesión expirada.' };
     }
-    const loggedInUserId = userData.user.id;
+    const loggedInUserId = user.id;
 
     // 2. Validar el rol (solo admin o abogado)
     // Utilizamos el cliente autenticado (sujeto a RLS) o un rpc para verificar el rol.

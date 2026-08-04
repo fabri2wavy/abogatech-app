@@ -99,7 +99,7 @@ export default function PapeleraExpedientesPage() {
 
   const handleEliminarDefinitivo = async () => {
     if (!expedienteAEliminar) return;
-    if (textoConfirmacion !== "ELIMINAR") {
+    if (textoConfirmacion.trim().toUpperCase() !== "ELIMINAR") {
       addToast("error", "Debes escribir ELIMINAR para confirmar.");
       return;
     }
@@ -319,7 +319,7 @@ export default function PapeleraExpedientesPage() {
                 <input
                   type="text"
                   value={textoConfirmacion}
-                  onChange={(e) => setTextoConfirmacion(e.target.value)}
+                  onChange={(e) => setTextoConfirmacion(e.target.value.toUpperCase())}
                   className="w-full px-4 py-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors font-mono uppercase"
                   placeholder="ELIMINAR"
                 />
@@ -332,7 +332,7 @@ export default function PapeleraExpedientesPage() {
                 <Button 
                   variant="primary" 
                   onClick={handleEliminarDefinitivo} 
-                  disabled={procesandoEliminacion || textoConfirmacion !== "ELIMINAR"} 
+                  disabled={procesandoEliminacion || textoConfirmacion.trim().toUpperCase() !== "ELIMINAR"} 
                   className="px-5 bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white border-transparent disabled:bg-red-300 disabled:text-white/70"
                 >
                   {procesandoEliminacion ? "Borrando..." : "Eliminar Definitivamente"}

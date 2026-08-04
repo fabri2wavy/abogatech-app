@@ -4,8 +4,7 @@ import { mapearUsuario } from './usuarioRepository';
 
 export async function obtenerPerfilActualServer(): Promise<UsuarioPerfil | null> {
   const supabase = await createServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return null;
 

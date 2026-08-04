@@ -50,8 +50,7 @@ export async function cerrarSesion(): Promise<void> {
 /* ── Obtener ID del usuario autenticado actual ──────────────── */
 export async function obtenerUsuarioActualId(): Promise<string | null> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
   return user?.id ?? null;
 }
 
@@ -63,8 +62,7 @@ export interface PerfilConRol {
 
 export async function obtenerPerfilConRol(): Promise<PerfilConRol | null> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) return null;
 

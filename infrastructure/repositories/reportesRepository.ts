@@ -46,10 +46,9 @@ async function verificarAccesoAdmin(
   supabase: Awaited<ReturnType<typeof createClient>>
 ): Promise<string | null> {
   const {
-    data: { session },
+    data: { user },
     error: authError,
-  } = await supabase.auth.getSession();
-  const user = session?.user;
+  } = await supabase.auth.getUser();
 
   if (authError || !user) {
     return 'No autorizado: Sesión expirada o inválida.';

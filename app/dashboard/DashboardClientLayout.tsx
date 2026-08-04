@@ -133,7 +133,7 @@ export default function DashboardClientLayout({
         { href: "/dashboard/configuracion", label: "Configuración", icon: configuracionIcon, section: "ADMINISTRACIÓN" },
         { href: "/dashboard/auditoria", label: "Auditoría", icon: auditoriaIcon },
       ];
-    } else if (userRol === 'abogado' || userRol === 'socio') {
+    } else if (userRol === 'abogado' || userRol === 'asociado_senior') {
       const perfilIcon = (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -149,9 +149,10 @@ export default function DashboardClientLayout({
         { href: "/dashboard/plantillas", label: "Plantillas", icon: plantillasIcon },
       ];
 
-      // Socio puede ver el equipo y reportes
-      if (userRol === 'socio') {
+      if (userRol === 'asociado_senior') {
+        // Asociado Senior puede ver finanzas, equipo y reportes
         items.push({ href: "/dashboard/equipo", label: "Equipo", icon: equipoIcon });
+        items.push({ href: "/dashboard/finanzas", label: "Finanzas", icon: finanzasIcon });
         items.push({ href: "/dashboard/reportes", label: "Reportes", icon: reportesIcon });
       }
 

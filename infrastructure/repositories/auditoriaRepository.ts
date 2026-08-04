@@ -16,16 +16,15 @@ export async function obtenerLogs(): Promise<RepositoryResponse<AuditoriaLog[]>>
     const supabase = await createClient();
     
     // 1. Verificación Fail-Fast: Administrador requerido
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const authData = { user: session?.user };
-    if (authError || !authData.user) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return { data: null, error: 'No autorizado: Sesión expirada o inválida.' };
     }
 
     const { data: perfil, error: perfilError } = await supabase
       .from('perfiles')
       .select('rol')
-      .eq('id', authData.user.id)
+      .eq('id', user.id)
       .single();
 
     if (perfilError || !perfil || perfil.rol !== 'admin') {
@@ -63,9 +62,8 @@ export async function registrarLog(
     const supabase = await createClient();
     
     // 1. Obtener usuario de forma segura server-side
-    const { data: { session }, error: authError } = await supabase.auth.getSession();
-  const authData = { user: session?.user };
-    if (authError || !authData.user) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
       return { data: null, error: 'No autorizado para registrar acciones.' };
     }
 
@@ -73,7 +71,7 @@ export async function registrarLog(
     const { data, error } = await supabase
       .from('auditoria_logs')
       .insert({
-        usuario_id: authData.user.id,
+        usuario_id: user.id,
         accion: payload.accion,
         entidad: payload.entidad,
         entidad_id: payload.entidad_id,

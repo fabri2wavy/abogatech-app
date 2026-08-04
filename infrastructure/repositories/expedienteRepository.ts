@@ -17,8 +17,7 @@ function construirNombre(
 
 export async function crearExpediente(expedienteData: Omit<Expediente, 'id' | 'fechaCreacion' | 'fechaActualizacion' | 'estado'>): Promise<Expediente | null> {
   const supabase = createClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     console.error("Error: No hay un usuario autenticado.");
@@ -173,7 +172,7 @@ export async function obtenerExpedientePorId(id: string): Promise<any | null> {
     console.error("Error al obtener el expediente:", error?.message);
     return null;
   }
-  const nombreCliente = construirNombre(
+  let nombreCliente = construirNombre(
     data.cliente?.nombres,
     data.cliente?.apellido_paterno,
     data.cliente?.apellido_materno,
@@ -183,6 +182,9 @@ export async function obtenerExpedientePorId(id: string): Promise<any | null> {
   if (data.cliente_id) {
     const clienteCompleto = await obtenerClientePorId(data.cliente_id);
     emailCliente = clienteCompleto?.email ?? '';
+    if (clienteCompleto?.nombreCompleto) {
+      nombreCliente = clienteCompleto.nombreCompleto;
+    }
   }
 
   return {

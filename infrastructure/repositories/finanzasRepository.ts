@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient, getUsuarioActual } from '../supabase/server';
+import { createClient, } from '../supabase/server';
 import {
   Honorario,
   CuotaPago,
@@ -41,6 +41,9 @@ interface FilaHonorario {
   moneda: string;
   estado_contrato: string;
   creado_en: string;
+  autorizado_administracion?: boolean;
+  porcentaje_fondo?: number;
+  distribucion_abogados?: any;
   cuotas_pago?: FilaCuota[];
 }
 
@@ -77,6 +80,9 @@ function mapearHonorario(fila: FilaHonorario): Honorario {
     moneda: fila.moneda as MonedaHonorario,
     estadoContrato: fila.estado_contrato as EstadoContrato,
     creadoEn: fila.creado_en,
+    autorizadoAdministracion: fila.autorizado_administracion,
+    porcentajeFondo: fila.porcentaje_fondo,
+    distribucionAbogados: fila.distribucion_abogados,
   };
 }
 
@@ -186,16 +192,16 @@ export async function crearHonorarioConCuotas(
 
   try {
     /* ── Validación asíncrona de identidad (Early Return) ─────── */
-    const usuario = await getUsuarioActual();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!usuario) {
+    if (authError || !user) {
       return {
         data: null,
         error: 'No autorizado: Sesión expirada o inválida.',
       };
     }
 
-    const userId = usuario.id;
+    const userId = user.id;
 
     /* ══════════════════════════════════════════════════════════
        VALIDADOR MATEMÁTICO ESTRICTO (Barrera Server-Side)
@@ -232,6 +238,9 @@ export async function crearHonorarioConCuotas(
         moneda: data.moneda,
         estado_contrato: data.estadoContrato,
         creado_por: userId,
+        autorizado_administracion: data.autorizadoAdministracion,
+        porcentaje_fondo: data.porcentajeFondo,
+        distribucion_abogados: data.distribucionAbogados,
       })
       .select()
       .single();
@@ -297,16 +306,16 @@ export async function registrarGasto(
 
   try {
     /* ── Validación asíncrona de identidad (Early Return) ─────── */
-    const usuario = await getUsuarioActual();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!usuario) {
+    if (authError || !user) {
       return {
         data: null,
         error: 'No autorizado: Sesión expirada o inválida.',
       };
     }
 
-    const userId = usuario.id;
+    const userId = user.id;
 
     /* ── Inserción DML con creado_por inyectado ───────────────────── */
     const { data: gastoInsertado, error: gastoError } = await supabase

@@ -34,7 +34,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!abogadoSeleccionado) {
-      setErrorMsg("Debes seleccionar un abogado o socio.");
+      setErrorMsg("Debes seleccionar un abogado o asociado senior.");
       return;
     }
 
@@ -84,7 +84,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
             <div className="space-y-4">
               <div>
                 <label htmlFor="abogado" className="block text-sm font-semibold text-[var(--color-text-primary)] mb-2">
-                  Seleccionar Abogado o Socio
+                  Seleccionar Abogado o Asociado Senior
                 </label>
                 
                 {cargando ? (
@@ -95,7 +95,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
                 ) : colegas.length === 0 ? (
                   <div className="p-4 border border-[var(--color-surface-border)] rounded-lg text-sm text-[var(--color-text-muted)] text-center bg-[var(--color-surface-hover)]">
                     <Users className="w-6 h-6 mx-auto mb-2 opacity-50" />
-                    No hay otros abogados o socios disponibles.
+                    No hay otros abogados o asociados senior disponibles.
                   </div>
                 ) : (
                   <select
@@ -114,7 +114,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
                     <option value="">-- Selecciona --</option>
                     {colegas.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.nombre_completo} ({c.rol === 'socio' ? 'Socio' : 'Abogado'})
+                        {c.nombre_completo} ({c.rol === 'asociado_senior' ? 'Asociado Senior' : 'Abogado'})
                       </option>
                     ))}
                   </select>
