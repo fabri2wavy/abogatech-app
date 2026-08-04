@@ -295,13 +295,11 @@ export function ClienteForm({ defaultValues, onSubmit, onCancel, isSubmitting }:
         )}
 
         {/* Datos de Contacto */}
-        {isActivo && (
-          <div className="space-y-2">
-            <Label req>Correo Electrónico</Label>
-            <input type="email" placeholder="Ej. correo@ejemplo.com" className={`${inp} ${errors.email ? css.inputError : ''}`} {...register("email")} />
-            <FErr msg={errors.email?.message} />
-          </div>
-        )}
+        <div className="space-y-2">
+          <Label req={isActivo}>Correo Electrónico</Label>
+          <input type="email" placeholder="Ej. correo@ejemplo.com" className={`${inp} ${errors.email ? css.inputError : ''}`} {...register("email")} />
+          <FErr msg={errors.email?.message} />
+        </div>
 
         <div className="space-y-2">
           <Label req>Teléfono / Celular</Label>
@@ -379,7 +377,7 @@ export function ClienteForm({ defaultValues, onSubmit, onCancel, isSubmitting }:
             {mostrarExtra ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             + Información adicional (opcional)
           </button>
-  
+
           {mostrarExtra && (
             <div className="mt-4 space-y-6 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className={css.stepGrid}>
@@ -391,7 +389,7 @@ export function ClienteForm({ defaultValues, onSubmit, onCancel, isSubmitting }:
                   <Label>Contacto del Referidor</Label>
                   <input type="text" className={inp} {...register("contactoReferidor")} />
                 </div>
-  
+
                 <div className="space-y-2">
                   <Label>Teléfono Laboral (Alternativo)</Label>
                   <input type="tel" className={inp} {...register("telefonoLaboral")} />

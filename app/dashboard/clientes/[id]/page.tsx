@@ -91,6 +91,7 @@ export default function DetalleClientePage() {
     nombresLegales: "",
     apellidoPaterno: "",
     apellidoMaterno: "",
+    nombreEmpresa: "",
     telefono: "",
     ci: "",
     expedido: "",
@@ -117,13 +118,15 @@ export default function DetalleClientePage() {
           nombresLegales: resCliente.nombresLegales || "",
           apellidoPaterno: resCliente.apellidoPaterno || "",
           apellidoMaterno: resCliente.apellidoMaterno || "",
+          nombreEmpresa: resCliente.nombreEmpresa || "",
           telefono: resCliente.telefono || "",
           ci: resCliente.ci || "",
           expedido: resCliente.expedido || "",
           telefonoLaboral: resCliente.telefonoLaboral || "",
           direccionOficina: resCliente.direccionOficina || "",
         });
-        setEmailDisplay(resCliente.email || "");
+        const em = resCliente.email || "";
+        setEmailDisplay(em.includes("@temp.local") ? "" : em);
       }
       setExpedientes(resExpedientes);
       setLoading(false);
@@ -137,12 +140,14 @@ export default function DetalleClientePage() {
   };
 
   const construirNombre = (): string => {
-    return (
-      [formData.nombresLegales, formData.apellidoPaterno, formData.apellidoMaterno]
-        .filter(Boolean)
-        .join(" ")
-        .trim() || "Sin registrar"
-    );
+    if (formData.nombreEmpresa && !formData.nombresLegales && !formData.apellidoPaterno) {
+      return formData.nombreEmpresa.trim();
+    }
+    const nombrePersona = [formData.nombresLegales, formData.apellidoPaterno, formData.apellidoMaterno]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    return nombrePersona || (formData.nombreEmpresa ? formData.nombreEmpresa.trim() : "Sin registrar");
   };
 
   /* ── Guardar cambios ───────────────────────────────────────── */
@@ -242,15 +247,13 @@ export default function DetalleClientePage() {
       {toast && (
         <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 fade-in duration-300">
           <div
-            className={`px-4 py-3 rounded-xl shadow-lg border text-sm font-medium flex items-center gap-2 min-w-[280px] max-w-[420px] ${
-              toast.type === "success"
+            className={`px-4 py-3 rounded-xl shadow-lg border text-sm font-medium flex items-center gap-2 min-w-[280px] max-w-[420px] ${toast.type === "success"
                 ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                 : "bg-red-50 border-red-200 text-red-800"
-            }`}
+              }`}
           >
-            <span className={`w-2 h-2 rounded-full shrink-0 ${
-              toast.type === "success" ? "bg-emerald-500" : "bg-red-500"
-            }`} />
+            <span className={`w-2 h-2 rounded-full shrink-0 ${toast.type === "success" ? "bg-emerald-500" : "bg-red-500"
+              }`} />
             {toast.msg}
             <button
               onClick={() => setToast(null)}
