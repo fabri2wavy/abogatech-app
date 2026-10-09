@@ -13,5 +13,5 @@ export function Alert({ variant, children, visible = true }: AlertProps) {
 
   const classes = [styles.alert, styles[variant]].join(" ");
 
-  return <div className={classes}>{children}</div>;
+  return <div className={classes} role={variant === "error" ? "alert" : "status"}>{children}</div>;
 }

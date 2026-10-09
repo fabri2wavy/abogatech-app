@@ -1,20 +1,57 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { GoogleGenAI } from '@google/genai';
+
+export const runtime = 'nodejs';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
 export async function POST(request: Request) {
     try {
         const { pregunta, archivo, abogadoId } = await request.json();
+        const apiKey = process.env.GROQ_API_KEY;
+
+        if (!apiKey) {
+            console.error('Falta configurar GROQ_API_KEY en el servidor.');
+            return NextResponse.json({ error: 'El asistente no está configurado.' }, { status: 503 });
+        }
+
+        if (typeof abogadoId !== 'string' || !abogadoId.trim() ||
+            (pregunta != null && typeof pregunta !== 'string') ||
+            (archivo != null && typeof archivo !== 'string') ||
+            (!pregunta?.trim() && !archivo)) {
+            return NextResponse.json({ error: 'Envía una consulta o un PDF y el ID del abogado.' }, { status: 400 });
+        }
+
+        let textoDocumento = '';
+        if (archivo) {
+            if (archivo.length > 7_000_000) {
+                return NextResponse.json({ error: 'El PDF supera el límite de 5 MB.' }, { status: 413 });
+            }
+            const buffer = Buffer.from(archivo, 'base64');
+            if (buffer.subarray(0, 5).toString() !== '%PDF-') {
+                return NextResponse.json({ error: 'El archivo adjunto no es un PDF válido.' }, { status: 400 });
+            }
+            const { PDFParse } = await import('pdf-parse');
+            const parser = new PDFParse({ data: buffer });
+            try {
+                const documento = await parser.getText({ pageJoiner: '' });
+                textoDocumento = documento.text.trim();
+            } catch {
+                return NextResponse.json({ error: 'No se pudo leer el PDF. Comprueba que no esté dañado ni protegido con contraseña.' }, { status: 422 });
+            } finally {
+                await parser.destroy();
+            }
+            if (!textoDocumento) {
+                return NextResponse.json({ error: 'El PDF no contiene texto extraíble. Si es un escaneo, conviértelo con OCR antes de adjuntarlo.' }, { status: 422 });
+            }
+            if (textoDocumento.length > 100_000) {
+                return NextResponse.json({ error: 'El documento es demasiado extenso. Adjunta solo las páginas que quieras analizar.' }, { status: 413 });
+            }
+        }
 
         console.log("🔍 Buscando datos en Supabase para el ID:", abogadoId);
-
-        if (!abogadoId) throw new Error("No se recibió el ID del abogado");
 
         const { data: perfilAbogado, error: errorPerfil } = await supabase
             .from('perfiles')
@@ -42,7 +79,7 @@ export async function POST(request: Request) {
         console.log(`Expedientes encontrados: ${misExpedientes?.length || 0}`);
 
         const systemPrompt = `
-      Eres el Asistente Legal de Inteligencia Artificial de Iturri & Asociados.
+      Eres el asistente de inteligencia artificial de ABOGATECH, una plataforma de gestión legal.
       
       CONTEXTO CRÍTICO:
       Estás hablando en privado con el Dr. ${nombreDoctor}. 
@@ -58,24 +95,41 @@ export async function POST(request: Request) {
       Si el usuario adjunta un documento, prioriza el análisis de ese texto legal.
     `;
 
-        const inputArray: any[] = [
-            { type: "text", text: systemPrompt + "\n\nMensaje del usuario: " + pregunta }
-        ];
-
-        if (archivo) {
-            inputArray.push({
-                type: "document",
-                data: archivo,
-                mime_type: "application/pdf"
-            });
-        }
-
-        const interaction = await ai.interactions.create({
-            model: "gemini-3.5-flash",
-            input: inputArray
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    {
+                        role: 'user',
+                        content: (pregunta?.trim() || 'Analiza el documento adjunto.') +
+                            (textoDocumento ? `\n\nTexto del PDF adjunto:\n${textoDocumento}` : ''),
+                    },
+                ],
+            }),
+            signal: AbortSignal.timeout(60_000),
         });
 
-        return NextResponse.json({ respuesta: interaction.output_text });
+        if (!response.ok) {
+            console.error('Groq rechazó la solicitud. Estado HTTP:', response.status);
+            return NextResponse.json({
+                error: response.status === 429
+                    ? 'Se alcanzó el límite de solicitudes de Groq. Intenta nuevamente en unos momentos.'
+                    : 'No se pudo obtener una respuesta de Groq. Revisa la clave y el modelo configurados en el servidor.',
+            }, { status: response.status === 429 ? 429 : 502 });
+        }
+
+        const completion = await response.json();
+        const respuesta = completion.choices?.[0]?.message?.content;
+        if (typeof respuesta !== 'string' || !respuesta.trim()) {
+            return NextResponse.json({ error: 'Groq devolvió una respuesta vacía.' }, { status: 502 });
+        }
+        return NextResponse.json({ respuesta });
 
     } catch (error) {
         console.error("Falla crítica en el endpoint:", error);

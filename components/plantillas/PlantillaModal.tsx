@@ -226,7 +226,7 @@ export default function PlantillaModal({
                 value={contenido}
                 onChange={(e) => setContenido(e.target.value)}
                 placeholder="Escribe el contenido del documento. Usa los tags del panel derecho para insertar datos dinámicos..."
-                className="w-full px-4 py-3 rounded-lg border border-[var(--color-surface-border)] bg-slate-50 text-[var(--color-text-primary)] text-sm leading-relaxed focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)] transition-all resize-y font-mono"
+                className="w-full px-4 py-3 rounded-lg border border-[var(--color-surface-border)] bg-slate-50 text-[var(--color-text-primary)] text-sm leading-relaxed focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)] transition-all resize-y font-mono"
                 style={{ minHeight: "400px" }}
                 required
               />

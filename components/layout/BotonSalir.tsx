@@ -18,7 +18,7 @@ export default function BotonSalir() {
       variant="ghost"
       fullWidth
       onClick={handleLogout}
-      className="justify-start px-4 text-[var(--color-danger)] hover:!text-red-400 hover:!bg-red-500/10"
+      className="justify-start px-4 !text-[var(--color-navy-muted)] hover:!text-white hover:!bg-[var(--color-navy-card)]"
     >
       <svg 
         width="16" 

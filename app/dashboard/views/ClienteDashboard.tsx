@@ -1,50 +1,21 @@
 "use client";
 
-import React from "react";
+import Link from "next/link";
+import { ArrowUpRight, BriefcaseBusiness, FileText, MessageSquareText } from "lucide-react";
+import { DashboardWelcome } from "@/components/layout/DashboardWelcome";
 
-interface ClienteDashboardProps {
-  nombre: string;
-}
-
-export default function ClienteDashboard({ nombre }: ClienteDashboardProps) {
-  const today = new Date().toLocaleDateString("es-ES", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
+export default function ClienteDashboard({ nombre }: { nombre: string }) {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Banner Cliente */}
-      <div className="bg-green-100 border-l-4 border-green-500 text-green-800 p-4 rounded-r-lg shadow-sm flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-          </svg>
-          <div>
-            <h2 className="font-bold text-lg">Portal del Cliente</h2>
-            <p className="text-sm opacity-90">Seguimiento de sus trámites legales</p>
-          </div>
+      <DashboardWelcome nombre={nombre} label="TU PORTAL PERSONAL" description="Mantén cerca la información de tus procesos y consulta lo que tu equipo legal comparte contigo." href="/dashboard/casos" action="Consultar mis expedientes" />
+      <section className="rounded-2xl border border-[var(--color-surface-border)] bg-white p-6 md:p-8">
+        <div className="flex items-center gap-3 mb-6"><span className="p-3 bg-blue-50 text-blue-600 rounded-xl"><BriefcaseBusiness size={22} /></span><div><h2 className="text-lg font-bold">Tus procesos, más cerca</h2><p className="text-sm text-[var(--color-text-secondary)]">Un espacio para seguir el trabajo de tu equipo legal.</p></div></div>
+        <div className="grid sm:grid-cols-2 gap-5 mb-6">
+          <div className="p-5 rounded-xl bg-[var(--color-surface)]"><FileText size={20} className="text-blue-600 mb-3" /><h3 className="font-semibold text-sm">Documentos compartidos</h3><p className="text-sm text-[var(--color-text-secondary)] mt-2">Consulta los documentos que tu abogado habilite en cada expediente.</p></div>
+          <div className="p-5 rounded-xl bg-[var(--color-surface)]"><MessageSquareText size={20} className="text-blue-600 mb-3" /><h3 className="font-semibold text-sm">Avances de tus casos</h3><p className="text-sm text-[var(--color-text-secondary)] mt-2">Revisa las actualizaciones que tu equipo comparta sobre tus procesos.</p></div>
         </div>
-      </div>
-
-      <div className="mb-8 animate-fade-up">
-        <h1 className="text-3xl font-bold mb-1" style={{ color: "var(--color-text-primary)" }}>
-          Bienvenido, {nombre}
-        </h1>
-        <p className="text-sm mt-1 capitalize" style={{ color: "var(--color-text-muted)" }}>
-          {today}
-        </p>
-      </div>
-
-      <div className="p-12 text-center rounded-xl border-2 border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-card)]">
-        <svg className="mx-auto mb-4" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <h3 className="text-xl font-semibold text-[var(--color-text-primary)] mb-2">Aquí verás el estado de tu caso</h3>
-        <p className="text-[var(--color-text-secondary)]">Próximamente podrás visualizar el avance de tu expediente en tiempo real.</p>
-      </div>
+        <Link href="/dashboard/casos" className="inline-flex items-center gap-3 text-sm font-semibold text-blue-600 hover:text-blue-800">Ir a mis expedientes <ArrowUpRight size={16} /></Link>
+      </section>
     </div>
   );
 }

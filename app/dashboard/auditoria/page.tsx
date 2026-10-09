@@ -260,7 +260,7 @@ export default function AuditoriaPage() {
   if (verificando) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-gold)]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-brand)]" />
         <p className="mt-4 text-[var(--color-text-muted)]">
           Verificando permisos...
         </p>
@@ -278,7 +278,7 @@ export default function AuditoriaPage() {
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
-            <ClipboardList className="w-8 h-8 text-[var(--color-gold)]" />
+            <ClipboardList className="w-8 h-8 text-[var(--color-brand)]" />
             Auditoría del Sistema
           </h1>
           <p className="mt-1 text-sm text-gray-500">
@@ -386,7 +386,7 @@ export default function AuditoriaPage() {
                       <button
                         onClick={() => setLogSeleccionado(log)}
                         className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400
-                                   hover:text-[var(--color-gold)] transition-colors px-2 py-1 rounded"
+                                   hover:text-[var(--color-brand)] transition-colors px-2 py-1 rounded"
                       >
                         <Eye className="w-3 h-3" />
                         Ver

@@ -142,14 +142,14 @@ function QuickAddForm({
         onChange={(e) => setValor(e.target.value)}
         disabled={guardando}
         className="flex-1 px-3 py-1.5 text-sm rounded-lg border border-gray-200 bg-gray-50
-                   focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                   focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                    transition-all disabled:opacity-50 placeholder:text-gray-400"
       />
       <button
         type="submit"
         disabled={guardando || !valor.trim()}
         className="inline-flex items-center justify-center w-8 h-8 rounded-lg
-                   bg-[var(--color-gold)] text-white hover:bg-[var(--color-gold-dark)]
+                   bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-dark)]
                    transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
         title="Agregar"
       >
@@ -389,7 +389,7 @@ export default function ConfiguracionPage() {
   if (verificando) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-gold)]" />
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-brand)]" />
         <p className="mt-4 text-[var(--color-text-muted)]">
           Verificando permisos...
         </p>
@@ -409,7 +409,7 @@ export default function ConfiguracionPage() {
       {/* ── Header ────────────────────────────────────────────── */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
-          <Settings className="w-8 h-8 text-[var(--color-gold)]" />
+          <Settings className="w-8 h-8 text-[var(--color-brand)]" />
           Configuración Global
         </h1>
         <p className="mt-1 text-sm text-gray-500">

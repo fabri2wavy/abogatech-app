@@ -110,7 +110,7 @@ function GlobalFinancialKPIs({ reporte, filasFiltradas, totalAlertasCobro }: { r
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <GlobalKPICard
-        icon={<DollarSign className="w-5 h-5 text-[var(--color-gold)]" strokeWidth={2} />}
+        icon={<DollarSign className="w-5 h-5 text-[var(--color-brand)]" strokeWidth={2} />}
         label="Total Facturado"
         valor={formatearMoneda(totalFacturado)}
         delay={0}
@@ -230,8 +230,8 @@ function AlertasGlobalesPanel({ alertas }: { alertas: AlertaCuotaVencida[] }) {
                 </div>
                 <Link
                   href={`/dashboard/casos/${alerta.expedienteId}`}
-                  className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-gold)]
-                             hover:bg-[var(--color-gold-dim)] transition-all opacity-0 group-hover:opacity-100"
+                  className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-brand)]
+                             hover:bg-[var(--color-brand-dim)] transition-all opacity-0 group-hover:opacity-100"
                   title="Ver expediente"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -278,7 +278,7 @@ function FilterBar({
         onChange={(e) => onAbogadoChange(e.target.value)}
         className="px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                    bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                   focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                   focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                    transition-all"
       >
         <option value="">Todos los abogados</option>
@@ -295,7 +295,7 @@ function FilterBar({
         onChange={(e) => onEstadoChange(e.target.value)}
         className="px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                    bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                   focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                   focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                    transition-all"
       >
         <option value="">Todos los estados</option>
@@ -320,7 +320,7 @@ function MasterCollectionsTable({ filas }: { filas: FilaReporteFinanciero[] }) {
     >
       <div className="px-5 py-4 border-b border-[var(--color-surface-border)]">
         <h3 className="text-sm font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-          <Banknote className="w-4 h-4 text-[var(--color-gold)]" strokeWidth={2} />
+          <Banknote className="w-4 h-4 text-[var(--color-brand)]" strokeWidth={2} />
           Contratos Activos
           <span className="text-xs font-normal text-[var(--color-text-muted)]">
             ({filas.length} expediente{filas.length !== 1 ? "s" : ""})
@@ -406,8 +406,8 @@ function MasterCollectionsTable({ filas }: { filas: FilaReporteFinanciero[] }) {
                     <td className="py-3 px-4 text-center">
                       <Link
                         href={`/dashboard/casos/${fila.expedienteId}`}
-                        className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-gold)]
-                                   hover:bg-[var(--color-gold-dim)] transition-all opacity-0 group-hover:opacity-100"
+                        className="p-1.5 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-brand)]
+                                   hover:bg-[var(--color-brand-dim)] transition-all opacity-0 group-hover:opacity-100"
                         title="Ver expediente"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -512,7 +512,7 @@ export default function FinanzasDashboardPage() {
         {verificandoAcceso ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4">
             <div className="w-10 h-10 rounded-full border-2 border-[var(--color-surface-border)]
-                            border-t-[var(--color-gold)] animate-spin" />
+                            border-t-[var(--color-brand)] animate-spin" />
             <span className="text-[var(--color-text-muted)]">Verificando permisos...</span>
           </div>
         ) : (

@@ -95,7 +95,7 @@ function PlantillaCard({
   return (
     <div
       className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col gap-2.5
-                 transition-all duration-200 hover:border-[var(--color-gold)] hover:shadow-[var(--shadow-md)]
+                 transition-all duration-200 hover:border-[var(--color-brand)] hover:shadow-[var(--shadow-md)]
                  group cursor-default"
     >
       {/* Header */}
@@ -141,8 +141,8 @@ function PlantillaCard({
         onClick={() => onGenerar(plantilla)}
         disabled={isProcessing}
         className="mt-auto w-full inline-flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold
-                   rounded-lg border border-[var(--color-gold)] text-[var(--color-gold)]
-                   hover:bg-[var(--color-gold-dim)] transition-all duration-200
+                   rounded-lg border border-[var(--color-brand)] text-[var(--color-brand)]
+                   hover:bg-[var(--color-brand-dim)] transition-all duration-200
                    disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {esteEstaProcessing ? (
@@ -393,7 +393,7 @@ export default function PlantillasTab({ expedienteId }: PlantillasTabProps) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <Zap className="w-4 h-4 text-[var(--color-gold)]" />
+            <Zap className="w-4 h-4 text-[var(--color-brand)]" />
             Generar Documento
           </h3>
           <p className="text-xs text-gray-500 mt-0.5">

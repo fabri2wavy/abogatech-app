@@ -9,9 +9,10 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
-import { Expediente, EstadoExpediente } from "@/domain/entities/Expediente";
+import { EstadoExpediente } from "@/domain/entities/Expediente";
 import { EventoAgendaDetallado } from "@/domain/entities/EventoAgenda";
 import { UsuarioPerfil } from "@/domain/entities/UsuarioPerfil";
+import { DashboardWelcome } from "@/components/layout/DashboardWelcome";
 import { Alert } from "@/components/ui/Alert";
 
 /* ══════════════════════════════════════════════════════════════
@@ -97,25 +98,12 @@ export default function AbogadoDashboard({
   expedientes,
   eventos,
 }: AbogadoDashboardProps) {
-  const hoy = new Date().toLocaleDateString("es-ES", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   const casosActivos = expedientes.filter((e) => e.estado !== "cerrado").length;
   const eventosHoy = eventos.filter((e) => esHoy(e.fechaInicio));
 
   return (
-    <div className="space-y-6 p-6 max-w-7xl mx-auto">
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-          Bienvenido, Dr/a. {usuario.nombre_completo}
-        </h1>
-        <p className="text-sm text-gray-500 mt-1 capitalize">{hoy}</p>
-      </div>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <DashboardWelcome nombre={usuario.nombre_completo} label="TU PRÁCTICA, CONECTADA" description="Tus expedientes y próximos pasos, con la claridad que necesitas para avanzar." href={usuario.rol === "finanzas" ? "/dashboard/finanzas" : "/dashboard/agenda"} action={usuario.rol === "finanzas" ? "Ver finanzas" : "Ver mi agenda"} />
 
       {/* ── Métricas (3 cards) ──────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

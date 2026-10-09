@@ -28,8 +28,8 @@ interface ReportesViewProps {
    Configuración de Recharts y UI
    ══════════════════════════════════════════════════════════════ */
 
-const COLORS_MATERIAS = ['#0f172a', '#1e293b', '#334155', '#475569', '#64748b', '#94a3b8'];
-const COLOR_PRIMARY = '#0ea5e9'; // Tailwind sky-500 para las barras
+const COLORS_MATERIAS = ['var(--color-brand)', 'var(--color-navy)', 'var(--color-brand-light)', 'var(--color-navy-light)', 'var(--color-silver)', 'var(--color-text-muted)'];
+const COLOR_PRIMARY = 'var(--color-brand)';
 
 const formatearMoneda = (monto: number) => {
   return new Intl.NumberFormat('es-BO', {

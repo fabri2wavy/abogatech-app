@@ -30,10 +30,10 @@ import EliminarEventoDialog from "@/app/dashboard/agenda/Modals/EliminarEventoDi
    ══════════════════════════════════════════════════════════════ */
 
 const COLORES_TIPO: Record<TipoEventoAgenda, string> = {
-  audiencia: "#dc2626",   // Rojo corporativo — Urgencia / Inamovible
-  vencimiento: "#f97316", // Naranja — Alerta temporal
-  reunion: "#2563eb",     // Azul corporativo — Coordinación
-  tarea: "#64748b",       // Gris pizarra — Trabajo interno
+  audiencia: "var(--color-brand)",       // Audiencias
+  vencimiento: "var(--color-warning)",     // Plazos
+  reunion: "var(--color-success)",     // Reuniones
+  tarea: "var(--color-text-secondary)", // Tareas
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -48,9 +48,9 @@ function mapearAEventoFullCalendar(
     title: evento.titulo,
     start: evento.fechaInicio,
     end: evento.fechaFin,
-    backgroundColor: COLORES_TIPO[evento.tipoEvento] ?? "#64748b",
-    borderColor: COLORES_TIPO[evento.tipoEvento] ?? "#64748b",
-    textColor: "#ffffff",
+    backgroundColor: COLORES_TIPO[evento.tipoEvento] ?? "var(--color-text-secondary)",
+    borderColor: COLORES_TIPO[evento.tipoEvento] ?? "var(--color-text-secondary)",
+    textColor: "var(--color-text-on-dark)",
     extendedProps: {
       tipoEvento: evento.tipoEvento,
       estado: evento.estado,

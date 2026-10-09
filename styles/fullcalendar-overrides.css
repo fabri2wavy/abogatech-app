@@ -106,13 +106,13 @@
 }
 
 .fc .fc-day-today {
-  background: var(--color-gold-glow) !important;
+  background: var(--color-brand-glow) !important;
 }
 
 .fc .fc-day-today .fc-daygrid-day-number {
   color: var(--color-text-primary) !important;
   font-weight: 700 !important;
-  background: var(--color-gold-dim);
+  background: var(--color-brand-dim);
   border-radius: var(--radius-full);
   width: 1.75rem;
   height: 1.75rem;

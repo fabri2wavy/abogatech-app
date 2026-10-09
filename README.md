@@ -25,7 +25,7 @@ Abogatech gestiona el ciclo de vida completo de un caso legal: desde el registro
 | Frontend | Next.js 16 (App Router) + React + Tailwind CSS |
 | Backend / BaaS | Supabase (PostgreSQL + Auth + Storage) |
 | Infraestructura local | Docker + Supabase CLI |
-| Inteligencia Artificial | Google Gemini API (`@google/genai`) |
+| Inteligencia Artificial | Groq API (modelo configurable mediante `GROQ_MODEL`) |
 | Arquitectura | Clean Architecture (Presentación / Dominio / Infraestructura) |
 | Seguridad | Row Level Security (RLS), Middleware de Next.js, RBAC aplicativo |
 
@@ -126,10 +126,12 @@ El modelo de datos de Expedientes incorpora nomenclatura específica del sistema
 - **RF-13.2:** El sistema debe permitir consultar el historial de informes de avance de un expediente.
 
 ### Módulo 14 — Asistente Legal con Inteligencia Artificial
-- **RF-14.1:** El sistema debe ofrecer un asistente conversacional (chat) impulsado por la API de Google Gemini, disponible para abogados autenticados.
+- **RF-14.1:** El sistema debe ofrecer un asistente conversacional (chat) impulsado por la API de Groq, disponible para abogados autenticados.
 - **RF-14.2:** El asistente debe recibir como contexto, en tiempo real, la identidad del abogado y hasta 10 de sus expedientes asignados (número de caso, título, estado y cliente asociado), consultados directamente desde la base de datos mediante `service_role`.
 - **RF-14.3:** El asistente debe personalizar el saludo inicial dirigiéndose al abogado por su nombre y apellido.
-- **RF-14.4:** El sistema debe permitir adjuntar un archivo a la consulta enviada al asistente.
+- **RF-14.4:** El sistema debe permitir adjuntar un PDF con texto extraíble (máximo 5 MB y 100.000 caracteres). Los escaneos requieren OCR previo.
+
+Configurar `GROQ_API_KEY` en `.env.local` y en el entorno del servidor desplegado, sin prefijos `NEXT_PUBLIC_` ni `EXPO_PUBLIC_`. El modelo predeterminado es `openai/gpt-oss-120b`, servido por Groq; se puede cambiar con `GROQ_MODEL`. Reiniciar el servidor después de modificar las variables de entorno.
 
 ---
 

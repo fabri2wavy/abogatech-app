@@ -93,6 +93,10 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
         <>
             {/* ── Panel de chat ──────────────────────────────────── */}
             <div
+                id="abogatech-assistant"
+                role="region"
+                aria-label="ABOGATECH IA"
+                inert={!abierto}
                 style={{
                     position: 'fixed',
                     bottom: '5.5rem',
@@ -116,7 +120,7 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                 {/* Header */}
                 <div
                     style={{
-                        background: 'linear-gradient(135deg, var(--color-navy) 0%, #111111 100%)',
+                        background: 'linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-card) 100%)',
                         borderBottom: '1px solid var(--color-navy-border)',
                         padding: '14px 16px',
                         display: 'flex',
@@ -132,14 +136,14 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                 width: '32px',
                                 height: '32px',
                                 borderRadius: 'var(--radius-full)',
-                                background: 'var(--color-gold-dim)',
-                                border: '1px solid rgba(204, 0, 0, 0.3)',
+                                background: 'var(--color-navy-card)',
+                                border: '1px solid rgba(37, 99, 235, 0.3)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
                         >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand-light)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M12 2a4 4 0 0 1 4 4v2a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z" />
                                 <path d="M16 14h.01" /><path d="M8 14h.01" />
                                 <path d="M12 18v2" /><path d="M7 22h10" />
@@ -157,7 +161,7 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                     lineHeight: 1.2,
                                 }}
                             >
-                                Abogatech AI
+                                ABOGATECH IA
                             </p>
                             <p
                                 style={{
@@ -167,7 +171,7 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                     fontFamily: 'var(--font-body)',
                                 }}
                             >
-                                Asistente Legal Privado
+                                Tu asistente legal
                             </p>
                         </div>
                     </div>
@@ -271,9 +275,9 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                     wordBreak: 'break-word',
                                     ...(msg.rol === 'usuario'
                                         ? {
-                                            background: 'var(--color-gold)',
-                                            color: 'var(--color-text-on-gold)',
-                                            boxShadow: '0 2px 8px rgba(204, 0, 0, 0.2)',
+                                            background: 'var(--color-brand)',
+                                            color: 'var(--color-text-on-brand)',
+                                            boxShadow: '0 2px 8px rgba(37, 99, 235, 0.2)',
                                         }
                                         : {
                                             background: 'var(--color-surface-card)',
@@ -310,7 +314,7 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                         width: '6px',
                                         height: '6px',
                                         borderRadius: '50%',
-                                        background: 'var(--color-gold)',
+                                        background: 'var(--color-brand)',
                                         animation: 'pulse 1.2s infinite',
                                     }}
                                 />
@@ -420,8 +424,8 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                                 transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)',
                             }}
                             onFocus={(e) => {
-                                e.currentTarget.style.borderColor = 'var(--color-gold)';
-                                e.currentTarget.style.boxShadow = '0 0 0 3px var(--color-gold-glow)';
+                                e.currentTarget.style.borderColor = 'var(--color-brand)';
+                                e.currentTarget.style.boxShadow = '0 0 0 3px var(--color-brand-glow)';
                             }}
                             onBlur={(e) => {
                                 e.currentTarget.style.borderColor = 'var(--color-surface-border)';
@@ -436,8 +440,8 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                             style={{
                                 background: cargando || (!input.trim() && !archivoBase64)
                                     ? 'var(--color-navy-light)'
-                                    : 'var(--color-gold)',
-                                color: 'var(--color-text-on-gold)',
+                                    : 'var(--color-brand)',
+                                color: 'var(--color-text-on-brand)',
                                 border: 'none',
                                 borderRadius: 'var(--radius-sm)',
                                 padding: '9px 12px',
@@ -462,7 +466,9 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
             {/* ── Botón flotante ─────────────────────────────────── */}
             <button
                 onClick={() => setAbierto((prev) => !prev)}
-                aria-label={abierto ? 'Cerrar asistente' : 'Abrir asistente AI'}
+                aria-label={abierto ? 'Cerrar asistente' : 'Abrir ABOGATECH IA'}
+                aria-expanded={abierto}
+                aria-controls="abogatech-assistant"
                 style={{
                     position: 'fixed',
                     bottom: '1.5rem',
@@ -478,10 +484,10 @@ export default function WidgetAsistente({ abogadoId, nombreAbogado }: Props) {
                     justifyContent: 'center',
                     background: abierto
                         ? 'var(--color-navy)'
-                        : 'linear-gradient(135deg, var(--color-gold) 0%, #a30000 100%)',
+                        : 'linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-hover) 100%)',
                     boxShadow: abierto
                         ? 'var(--shadow-lg)'
-                        : 'var(--shadow-gold), 0 8px 24px rgba(204, 0, 0, 0.3)',
+                        : 'var(--shadow-brand), 0 8px 24px rgba(37, 99, 235, 0.3)',
                     transition: 'transform var(--transition-base), background var(--transition-base), box-shadow var(--transition-base)',
                     transform: abierto ? 'rotate(0deg)' : 'rotate(0deg)',
                 }}

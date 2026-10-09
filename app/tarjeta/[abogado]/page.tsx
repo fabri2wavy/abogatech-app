@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: Props) {
   if (!perfil) return { title: 'Perfil no encontrado' };
   
   return {
-    title: `${perfil.nombre} | Iturri & Asociados`,
-    description: `${perfil.cargo} en Iturri & Asociados. Contacto y oficinas.`,
+    title: `${perfil.nombre} | ABOGATECH`,
+    description: `${perfil.cargo}. Consulta su perfil profesional y datos de contacto en ABOGATECH.`,
   };
 }
 

@@ -60,7 +60,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
       >
         <div className="px-6 py-5 border-b border-[var(--color-surface-border)] flex items-center justify-between bg-[var(--color-surface-card)]">
           <h3 className="text-xl font-bold text-[var(--color-text-primary)] flex items-center gap-3">
-            <Share2 className="w-5 h-5 text-[var(--color-gold)]" />
+            <Share2 className="w-5 h-5 text-[var(--color-brand)]" />
             Compartir Expediente
           </h3>
           <button
@@ -89,7 +89,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
                 
                 {cargando ? (
                   <div className="flex items-center gap-3 p-3 border border-[var(--color-surface-border)] rounded-lg text-sm text-[var(--color-text-muted)]">
-                    <div className="w-4 h-4 rounded-full border-2 border-[var(--color-surface-border)] border-t-[var(--color-gold)] animate-spin" />
+                    <div className="w-4 h-4 rounded-full border-2 border-[var(--color-surface-border)] border-t-[var(--color-brand)] animate-spin" />
                     Cargando lista...
                   </div>
                 ) : colegas.length === 0 ? (
@@ -107,7 +107,7 @@ export function ModalCompartirExpediente({ expedienteId, usuarioActualId, onClos
                     }}
                     className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                                bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                               focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                               focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                                transition-all"
                     disabled={guardando}
                   >

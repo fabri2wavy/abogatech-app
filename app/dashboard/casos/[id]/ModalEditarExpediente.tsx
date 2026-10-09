@@ -63,7 +63,7 @@ export function ModalEditarExpediente({
           {/* Header */}
           <div className="sticky top-0 z-10 bg-[var(--color-surface-card)] px-6 py-4 border-b border-[var(--color-surface-border)] flex items-center justify-between">
             <h2 className="text-base font-bold text-[var(--color-text-primary)] flex items-center gap-2">
-              <Gavel className="w-5 h-5 text-[var(--color-gold)]" strokeWidth={2} />
+              <Gavel className="w-5 h-5 text-[var(--color-brand)]" strokeWidth={2} />
               Editar Expediente
             </h2>
             <button
@@ -93,7 +93,7 @@ export function ModalEditarExpediente({
                 placeholder="Ej. 12345678"
                 className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                            bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                           focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                           focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                            transition-all placeholder:text-[var(--color-text-muted)]"
               />
             </div>
@@ -109,7 +109,7 @@ export function ModalEditarExpediente({
                 placeholder="Ej. Juzgado Público Civil y Comercial"
                 className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                            bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                           focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                           focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                            transition-all placeholder:text-[var(--color-text-muted)]"
               />
             </div>
@@ -125,7 +125,7 @@ export function ModalEditarExpediente({
                 placeholder="Breve descripción del caso"
                 className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                            bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                           focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                           focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                            transition-all placeholder:text-[var(--color-text-muted)]"
               />
             </div>
@@ -142,7 +142,7 @@ export function ModalEditarExpediente({
                   placeholder="Ej. Civil, Penal"
                   className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                              bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                             focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                             focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                              transition-all placeholder:text-[var(--color-text-muted)]"
                 />
               </div>
@@ -157,7 +157,7 @@ export function ModalEditarExpediente({
                   placeholder="Ej. Juan Pérez"
                   className="w-full px-4 py-2.5 text-sm rounded-lg border border-[var(--color-surface-border)]
                              bg-[var(--color-surface-card)] text-[var(--color-text-primary)]
-                             focus:outline-none focus:border-[var(--color-gold)] focus:ring-1 focus:ring-[var(--color-gold)]
+                             focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)]
                              transition-all placeholder:text-[var(--color-text-muted)]"
                 />
               </div>
@@ -182,12 +182,12 @@ export function ModalEditarExpediente({
               onClick={handleGuardar}
               disabled={guardando}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-lg
-                         bg-[var(--color-navy)] text-[var(--color-gold-light)]
+                         bg-[var(--color-navy)] text-[var(--color-brand-light)]
                          shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)]
                          transition-all disabled:opacity-50"
             >
               {guardando ? (
-                <div className="w-4 h-4 rounded-full border-2 border-[var(--color-gold-light)]/30 border-t-[var(--color-gold-light)] animate-spin" />
+                <div className="w-4 h-4 rounded-full border-2 border-[var(--color-brand-light)]/30 border-t-[var(--color-brand-light)] animate-spin" />
               ) : (
                 <Save className="w-4 h-4" />
               )}

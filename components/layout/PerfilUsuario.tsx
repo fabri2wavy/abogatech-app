@@ -40,9 +40,9 @@ export default function PerfilUsuario() {
         <div
           className="flex items-center justify-center w-9 h-9 rounded-full text-xs font-semibold shrink-0"
           style={{
-            background: "var(--color-gold-dim)",
-            color: "var(--color-gold-light)",
-            border: "1px solid rgba(204, 0, 0, 0.3)",
+            background: "var(--color-navy-mid)",
+            color: "var(--color-brand-light)",
+            border: "1px solid rgba(37, 99, 235, 0.3)",
           }}
         >
           {iniciales}
@@ -50,7 +50,7 @@ export default function PerfilUsuario() {
         <div className="min-w-0 flex-1">
           <p
             className="text-xs truncate"
-            style={{ color: "var(--color-text-muted)" }}
+            style={{ color: "var(--color-navy-muted)" }}
           >
             {email}
           </p>

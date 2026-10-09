@@ -90,7 +90,7 @@ export function exportarComprobanteExcel(honorario: Honorario, expediente: any) 
 
   // Construir filas para la hoja de Excel
   const data = [
-    ["ITURRI & ASOCIADOS", "", "", "", "", "Nº 8"],
+    ["ABOGATECH", "", "", "", "", "Nº 8"],
     ["La Paz, Bolivia", "", "", "", "", ""],
     [],
     ["COMPROBANTE DE EGRESO"],

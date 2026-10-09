@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { iniciarSesion } from "@/infrastructure/repositories/authRepository";
 
 import { AuthCard } from "@/components/ui/AuthCard";
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -22,14 +24,18 @@ export default function LoginPage() {
     setLoading(true);
     setMensaje("");
 
-    const resultado = await iniciarSesion(email, password);
-
-    if (!resultado.success) {
-      setMensaje("Error al iniciar sesión: " + resultado.error);
-      setLoading(false);
-    } else {
-      setMensaje("¡Login exitoso! Entrando al sistema...");
+    try {
+      const resultado = await iniciarSesion(email.trim(), password);
+      if (!resultado.success) {
+        setMensaje(`Error al iniciar sesión. ${resultado.error || "Inténtalo nuevamente."}`);
+        setLoading(false);
+        return;
+      }
+      setMensaje("Sesión iniciada. Abriendo tu espacio de trabajo…");
       router.push("/dashboard");
+    } catch {
+      setMensaje("Error de conexión. Inténtalo nuevamente en unos momentos.");
+      setLoading(false);
     }
   };
 
@@ -46,24 +52,36 @@ export default function LoginPage() {
 
       <form onSubmit={handleLogin} className={styles.form}>
         <FormField
-          label="Correo Electrónico"
+          label="Correo electrónico"
           id="login-email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="admin@iturri.com"
+          placeholder="nombre@tuorganizacion.com"
+          autoComplete="username"
+          variant="light"
+          disabled={loading}
         />
 
-        <FormField
-          label="Contraseña"
-          id="login-password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder="••••••••"
-        />
+        <div className={styles.passwordField}>
+          <FormField
+            label="Contraseña"
+            id="login-password"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder="••••••••"
+            autoComplete="current-password"
+            variant="light"
+            disabled={loading}
+            className={styles.passwordInput}
+          />
+          <button type="button" className={styles.passwordToggle} aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"} aria-pressed={showPassword} onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         <div className={styles.buttonGroup}>
           <Button
@@ -73,7 +91,8 @@ export default function LoginPage() {
             fullWidth
             loading={loading}
           >
-            {loading ? "Procesando…" : "Iniciar Sesión"}
+            {loading ? "Ingresando…" : "Ingresar a mi espacio"}
+            {!loading && <ArrowRight size={17} />}
           </Button>
         </div>
       </form>

@@ -20,7 +20,29 @@ export async function iniciarSesion(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return { success: false, error: error.message };
+    if (error.name === 'AuthRetryableFetchError' && !error.status) {
+      return {
+        success: false,
+        error: 'No se pudo conectar con el servicio de autenticación. Comprueba tu conexión e inténtalo nuevamente.',
+      };
+    }
+
+    if (error.code === 'invalid_credentials') {
+      return { success: false, error: 'El correo o la contraseña no son correctos.' };
+    }
+
+    if (error.code === 'email_not_confirmed') {
+      return { success: false, error: 'Confirma tu correo electrónico antes de ingresar.' };
+    }
+
+    if (error.status === 429) {
+      return { success: false, error: 'Se realizaron demasiados intentos. Espera unos minutos antes de volver a ingresar.' };
+    }
+
+    return {
+      success: false,
+      error: 'El servicio de autenticación no pudo completar la solicitud. Inténtalo nuevamente en unos momentos.',
+    };
   }
 
   return { success: true };

@@ -86,7 +86,7 @@ export default function InformesAvanceTab({ expedienteId }: InformesAvanceTabPro
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-bold text-gray-900 flex items-center gap-2">
-            <ClipboardList className="w-4 h-4 text-[var(--color-gold)]" />
+            <ClipboardList className="w-4 h-4 text-[var(--color-brand)]" />
             Informes de Avance Mensual
           </h3>
           <p className="text-xs text-gray-500 mt-0.5">

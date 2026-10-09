@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/infrastructure/supabase/client';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import { Brand } from '@/components/ui/Brand';
 
 export default function AsistenteLegal() {
     const [mensajes, setMensajes] = useState<{ rol: string, contenido: string }[]>([]);
@@ -68,9 +71,12 @@ export default function AsistenteLegal() {
             });
 
             const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || 'No se pudo procesar la consulta.');
+            }
             setMensajes((prev) => [...prev, { rol: 'ia', contenido: data.respuesta }]);
         } catch (error) {
-            setMensajes((prev) => [...prev, { rol: 'ia', contenido: 'Error de conexión.' }]);
+            setMensajes((prev) => [...prev, { rol: 'ia', contenido: error instanceof Error ? error.message : 'Error de conexión.' }]);
         } finally {
             setCargando(false);
         }
@@ -81,7 +87,7 @@ export default function AsistenteLegal() {
             <div className="flex h-screen items-center justify-center bg-gray-50">
                 <div className="text-center p-8 bg-white shadow-lg rounded-xl">
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Acceso Restringido</h2>
-                    <p className="text-gray-500">Por favor, inicia sesión en el CRM para usar el asistente AI.</p>
+                    <p className="text-gray-500">Por favor, inicia sesión en ABOGATECH para usar el asistente AI.</p>
                 </div>
             </div>
         );
@@ -89,11 +95,11 @@ export default function AsistenteLegal() {
 
     return (
         <div className="flex flex-col h-screen bg-gray-50 font-sans">
-            <header className="bg-slate-900 text-white p-4 shadow-md flex items-center justify-between">
-                <h1 className="text-xl font-bold">Abogatech AI</h1>
+            <header className="bg-[var(--color-navy)] text-white p-4 sm:px-8 shadow-md flex flex-wrap gap-4 items-center justify-between">
+                <div className="flex items-center gap-4"><Link href="/dashboard" aria-label="Volver al panel" className="p-2 rounded-lg hover:bg-white/10"><ArrowLeft size={20} /></Link><Brand light /><h1 className="sr-only">ABOGATECH IA</h1></div>
                 <div className="flex items-center gap-2 text-sm text-green-400">
                     <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    Conectado como Doctor
+                    Sesión iniciada
                 </div>
             </header>
 
@@ -101,7 +107,7 @@ export default function AsistenteLegal() {
                 {mensajes.length === 0 && (
                     <div className="text-center text-gray-400 mt-20">
                         <p className="text-lg">Asistente Privado y Lector de Documentos.</p>
-                        <p className="text-sm">Di "Hola" para comenzar o adjunta un expediente PDF.</p>
+                        <p className="text-sm">Escribe tu consulta o adjunta un expediente PDF.</p>
                     </div>
                 )}
 

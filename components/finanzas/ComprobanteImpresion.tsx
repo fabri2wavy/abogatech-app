@@ -136,7 +136,7 @@ export default function ComprobanteImpresion({ honorario, expediente }: Comproba
         {/* Cabecera */}
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h1 className="font-bold text-base italic">ITURRI & ASOCIADOS</h1>
+            <h1 className="font-bold text-base tracking-wide">ABOGATECH</h1>
             <p className="italic text-xs">La Paz, Bolivia</p>
           </div>
           <div className="border border-black px-6 py-1 font-bold text-lg">
